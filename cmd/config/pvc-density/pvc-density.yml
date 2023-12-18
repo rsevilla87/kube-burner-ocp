@@ -8,6 +8,7 @@ global:
     type: {{.INDEXING_TYPE}}
   measurements:
     - name: podLatency
+      podLatencyMetrics: {{.POD_LATENCY_METRICS}}
 
 jobs:
   - name: add-default-storage

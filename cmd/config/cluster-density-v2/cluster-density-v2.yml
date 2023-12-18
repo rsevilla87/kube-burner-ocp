@@ -9,6 +9,7 @@ global:
     type: {{.INDEXING_TYPE}}
   measurements:
     - name: podLatency
+      podLatencyMetrics: {{.POD_LATENCY_METRICS}}
       thresholds:
         - conditionType: Ready
           metric: P99
