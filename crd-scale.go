@@ -35,7 +35,7 @@ func NewCrdScale(wh *workloads.WorkloadHelper) *cobra.Command {
 
 		},
 		Run: func(cmd *cobra.Command, args []string) {
-			wh.Run(cmd.Name(), getMetrics(cmd, "metrics-aggregated.yml"), alertsProfiles)
+			setMetrics(cmd, "metrics-aggregated.yml")
 		},
 	}
 	cmd.Flags().IntVar(&iterations, "iterations", 0, "Number of CRDs to create")

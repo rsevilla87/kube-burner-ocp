@@ -57,8 +57,13 @@ func NewIndex(metricsEndpoint *string, ocpMetaAgent *ocpmetadata.Metadata) *cobr
 			esIndex, _ := cmd.Flags().GetString("es-index")
 			workloads.ConfigSpec.GlobalConfig.UUID = uuid
 			if esServer != "" && esIndex != "" {
-				workloads.ConfigSpec.Indexers = append(workloads.ConfigSpec.Indexers,
-					config.Indexer{
+				workloads.ConfigSpec.MetricsEndpoints = append(workloads.ConfigSpec.MetricsEndpoints,
+					config.MetricsEndpoint{
+						PrometheusURL:           prometheusURL,
+						Token:                   prometheusToken,
+						PrometheusStep:          prometheusStep,
+						PrometheusSkipTLSVerify: true,
+						Metrics:                 []string{metricsProfile},
 						IndexerConfig: indexers.IndexerConfig{
 							Type:    indexers.ElasticIndexer,
 							Servers: []string{esServer},
@@ -69,8 +74,12 @@ func NewIndex(metricsEndpoint *string, ocpMetaAgent *ocpmetadata.Metadata) *cobr
 				if metricsDirectory == "collected-metrics" {
 					metricsDirectory = metricsDirectory + "-" + uuid
 				}
-				workloads.ConfigSpec.Indexers = append(workloads.ConfigSpec.Indexers,
-					config.Indexer{
+				workloads.ConfigSpec.MetricsEndpoints = append(workloads.ConfigSpec.MetricsEndpoints,
+					config.MetricsEndpoint{
+						PrometheusURL:           prometheusURL,
+						Token:                   prometheusToken,
+						PrometheusStep:          prometheusStep,
+						PrometheusSkipTLSVerify: true,
 						IndexerConfig: indexers.IndexerConfig{
 							Type:             indexers.LocalIndexer,
 							MetricsDirectory: metricsDirectory,
@@ -94,13 +103,8 @@ func NewIndex(metricsEndpoint *string, ocpMetaAgent *ocpmetadata.Metadata) *cobr
 				"sdnType":         clusterMetadata.SDNType,
 			}
 			metricsScraper := metrics.ProcessMetricsScraperConfig(metrics.ScraperConfig{
-				ConfigSpec:      workloads.ConfigSpec,
-				PrometheusStep:  prometheusStep,
+				ConfigSpec:      &workloads.ConfigSpec,
 				MetricsEndpoint: *metricsEndpoint,
-				MetricsProfiles: []string{metricsProfile},
-				SkipTLSVerify:   true,
-				URL:             prometheusURL,
-				Token:           prometheusToken,
 				UserMetaData:    userMetadata,
 				RawMetadata:     metadata,
 			})
@@ -116,8 +120,8 @@ func NewIndex(metricsEndpoint *string, ocpMetaAgent *ocpmetadata.Metadata) *cobr
 					rc = 1
 				}
 			}
-			if workloads.ConfigSpec.Indexers[0].Type == indexers.LocalIndexer && tarballName != "" {
-				if err := metrics.CreateTarball(workloads.ConfigSpec.Indexers[0].IndexerConfig); err != nil {
+			if workloads.ConfigSpec.MetricsEndpoints[0].Type == indexers.LocalIndexer && tarballName != "" {
+				if err := metrics.CreateTarball(workloads.ConfigSpec.MetricsEndpoints[0].IndexerConfig); err != nil {
 					log.Fatal(err)
 				}
 			}

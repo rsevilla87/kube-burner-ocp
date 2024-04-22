@@ -1,11 +1,14 @@
 module kube-burner.io/ocp
 
-go 1.19
+go 1.21
+
+toolchain go1.21.9
 
 require (
 	github.com/cloud-bulldozer/go-commons v1.0.14
 	github.com/google/uuid v1.5.0
 	github.com/kube-burner/kube-burner v1.9.5
+	github.com/openshift/api v0.0.0-20230718161610-2a3e8b481cec
 	github.com/openshift/client-go v0.0.0-20230718165156-6014fb98e86a
 	github.com/sirupsen/logrus v1.9.0
 	github.com/spf13/cobra v1.6.1
@@ -43,7 +46,6 @@ require (
 	github.com/montanaflynn/stats v0.7.1 // indirect
 	github.com/munnerz/goautoneg v0.0.0-20191010083416-a7dc8b61c822 // indirect
 	github.com/opensearch-project/opensearch-go v1.1.0 // indirect
-	github.com/openshift/api v0.0.0-20230718161610-2a3e8b481cec // indirect
 	github.com/openshift/custom-resource-status v1.1.2 // indirect
 	github.com/pborman/uuid v1.2.0 // indirect
 	github.com/prometheus/client_golang v1.16.0 // indirect
@@ -77,3 +79,5 @@ require (
 	sigs.k8s.io/structured-merge-diff/v4 v4.2.3 // indirect
 	sigs.k8s.io/yaml v1.3.0 // indirect
 )
+
+replace github.com/kube-burner/kube-burner => /home/rsevilla/labs/kube-burner

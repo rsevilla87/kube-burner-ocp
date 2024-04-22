@@ -18,6 +18,7 @@ import (
 	"embed"
 	"fmt"
 	"os"
+	"strconv"
 	"time"
 
 	"github.com/cloud-bulldozer/go-commons/indexers"
@@ -34,6 +35,7 @@ import (
 var ocpConfig embed.FS
 
 const configDir = "config"
+const alertsProfile = "alerts.yml"
 
 func openShiftCmd() *cobra.Command {
 	var workloadConfig workloads.Config
@@ -75,6 +77,7 @@ func openShiftCmd() *cobra.Command {
 			}
 			os.Exit(0)
 		}
+		os.Setenv("LOCAL_INDEXING", strconv.FormatBool(*localIndexing))
 		if esServer != "" || *localIndexing {
 			if esServer != "" {
 				indexer = string(indexers.ElasticIndexer)
@@ -103,6 +106,11 @@ func openShiftCmd() *cobra.Command {
 		if err := ocp.GatherMetadata(&wh, alerting); err != nil {
 			log.Fatal(err.Error())
 		}
+		if alerting {
+			os.Setenv("ALERTS", alertsProfile)
+		}
+		os.Setenv("PROMETHEUS_URL", wh.PrometheusURL)
+		os.Setenv("PROMETHEUS_TOKEN", wh.PrometheusToken)
 	}
 	ocpCmd.AddCommand(
 		ocp.NewClusterDensity(&wh, "cluster-density-v2"),
