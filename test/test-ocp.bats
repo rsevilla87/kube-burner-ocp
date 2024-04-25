@@ -41,7 +41,7 @@ teardown_file() {
 
 @test "node-density-heavy: gc-metrics=true; local-indexing=true" {
   run_cmd kube-burner-ocp node-density-heavy --pods-per-node=75 --uuid=abcd --local-indexing --gc-metrics=true
-  check_file_list collected-metrics-abcd/etcdVersion.json collected-metrics-abcd/clusterMetadata.json collected-metrics-abcd/jobSummary-node-density-heavy.json collected-metrics-abcd/jobSummary-garbage-collection.json collected-metrics-abcd/podLatencyMeasurement-node-density-heavy.json collected-metrics-abcd/podLatencyQuantilesMeasurement-node-density-heavy.json
+  check_file_list reporting-metrics/etcdVersion.json reporting-metrics/clusterMetadata.json reporting-metrics/jobSummary-node-density-heavy.json reporting-metrics/jobSummary-garbage-collection.json reporting-metrics/podLatencyMeasurement-node-density-heavy.json reporting-metrics/podLatencyQuantilesMeasurement-node-density-heavy.json
 }
 
 @test "cluster-density-ms: metrics-endpoint=true; es-indexing=true" {
@@ -76,11 +76,11 @@ teardown_file() {
 }
 
 @test "index: local-indexing=true" {
-  run_cmd kube-burner-ocp index --uuid="${UUID}" --metrics-profile metrics-profile.yaml
+  run_cmd kube-burner-ocp index --uuid="${UUID}" --metrics-profile metrics.yml
 }
 
 @test "index: metrics-endpoints=true; es-indexing=true" {
-  run_cmd kube-burner-ocp index --uuid="${UUID}" --metrics-endpoint metrics-endpoints.yaml --metrics-profile metrics-profile.yaml --es-server=https://search-perfscale-dev-chmf5l4sh66lvxbnadi4bznl3a.us-west-2.es.amazonaws.com:443 --es-index=ripsaw-kube-burner
+  run_cmd kube-burner-ocp index --uuid="${UUID}" --metrics-endpoint metrics-endpoints.yaml --metrics-profile metrics.yml --es-server=https://search-perfscale-dev-chmf5l4sh66lvxbnadi4bznl3a.us-west-2.es.amazonaws.com:443 --es-index=ripsaw-kube-burner
 }
 
 @test "networkpolicy-multitenant" {

@@ -62,7 +62,6 @@ func openShiftCmd() *cobra.Command {
 	extract := ocpCmd.PersistentFlags().Bool("extract", false, "Extract workload in the current directory")
 	ocpCmd.PersistentFlags().StringVar(&metricsProfileType, "profile-type", "both", "Metrics profile to use, supported options are: regular, reporting or both")
 	ocpCmd.MarkFlagsRequiredTogether("es-server", "es-index")
-	ocpCmd.MarkFlagsMutuallyExclusive("es-server", "local-indexing")
 	ocpCmd.PersistentPreRun = func(cmd *cobra.Command, args []string) {
 		var indexer string
 		if cmd.Name() == "version" {
@@ -89,13 +88,14 @@ func openShiftCmd() *cobra.Command {
 		kubeClientProvider := config.NewKubeClientProvider("", "")
 		wh = workloads.NewWorkloadHelper(workloadConfig, ocpConfig, kubeClientProvider)
 		envVars := map[string]string{
-			"ES_SERVER":     esServer,
-			"ES_INDEX":      esIndex,
-			"QPS":           fmt.Sprintf("%d", QPS),
-			"BURST":         fmt.Sprintf("%d", burst),
-			"GC":            fmt.Sprintf("%v", gc),
-			"GC_METRICS":    fmt.Sprintf("%v", gcMetrics),
-			"INDEXING_TYPE": indexer,
+			"ES_SERVER":      esServer,
+			"ES_INDEX":       esIndex,
+			"LOCAL_INDEXING": fmt.Sprintf("%v", *localIndexing),
+			"QPS":            fmt.Sprintf("%d", QPS),
+			"BURST":          fmt.Sprintf("%d", burst),
+			"GC":             fmt.Sprintf("%v", gc),
+			"GC_METRICS":     fmt.Sprintf("%v", gcMetrics),
+			"INDEXING_TYPE":  indexer,
 		}
 		if alerting {
 			envVars["ALERTS"] = "alerts.yml"

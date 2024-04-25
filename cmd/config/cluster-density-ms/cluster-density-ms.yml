@@ -18,11 +18,11 @@ metricsEndpoints:
       defaultIndex: {{.ES_INDEX}}
       type: {{.INDEXING_TYPE}}
 {{ end }}
-{{ if .LOCAL_INDEXING }}
+{{ if eq .LOCAL_INDEXING "true" }}
   - metrics: [{{.TS_METRICS}}]
     indexer:
       type: local
-      metricsDirectory: reporting-metrics
+      metricsDirectory: ts-metrics
   - metrics: [metrics-report.yml]
     indexer:
       type: local
