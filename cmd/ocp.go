@@ -20,7 +20,6 @@ import (
 	"os"
 	"time"
 
-	"github.com/cloud-bulldozer/go-commons/indexers"
 	uid "github.com/google/uuid"
 	"github.com/kube-burner/kube-burner/pkg/config"
 	"github.com/kube-burner/kube-burner/pkg/util"
@@ -63,7 +62,6 @@ func openShiftCmd() *cobra.Command {
 	ocpCmd.PersistentFlags().StringVar(&metricsProfileType, "profile-type", "both", "Metrics profile to use, supported options are: regular, reporting or both")
 	ocpCmd.MarkFlagsRequiredTogether("es-server", "es-index")
 	ocpCmd.PersistentPreRun = func(cmd *cobra.Command, args []string) {
-		var indexer string
 		if cmd.Name() == "version" {
 			return
 		}
@@ -73,13 +71,6 @@ func openShiftCmd() *cobra.Command {
 				log.Fatal(err.Error())
 			}
 			os.Exit(0)
-		}
-		if esServer != "" || *localIndexing {
-			if esServer != "" {
-				indexer = string(indexers.ElasticIndexer)
-			} else {
-				indexer = string(indexers.LocalIndexer)
-			}
 		}
 		if checkHealth {
 			ocp.ClusterHealthCheck()
@@ -95,7 +86,6 @@ func openShiftCmd() *cobra.Command {
 			"BURST":          fmt.Sprintf("%d", burst),
 			"GC":             fmt.Sprintf("%v", gc),
 			"GC_METRICS":     fmt.Sprintf("%v", gcMetrics),
-			"INDEXING_TYPE":  indexer,
 		}
 		if alerting {
 			envVars["ALERTS"] = "alerts.yml"

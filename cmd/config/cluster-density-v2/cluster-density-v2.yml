@@ -20,7 +20,7 @@ metricsEndpoints:
       esServers: ["{{.ES_SERVER}}"]
       insecureSkipVerify: true
       defaultIndex: {{.ES_INDEX}}
-      type: {{.INDEXING_TYPE}}
+      type: opensearch
 {{ end }}
 {{ if eq .LOCAL_INDEXING "true" }}
   - metrics: [{{.TS_METRICS}}]
