@@ -167,14 +167,18 @@ teardown_file() {
   fi
   run_cmd ${KUBE_BURNER_OCP} virt-capacity-benchmark ${STORAGE_PARAMETER} --max-iterations 2  --data-volume-count 2 --vms 2 --skip-migration-job --skip-resize-job
   run_cmd kube-burner-ocp virt-capacity-benchmark --cleanup-only
-  local jobs=("create-vms" "restart-vms")
+  local jobs=("create-vms-1" "create-vms-2" "restart-vms-0" "restart-vms-1")
   for job in "${jobs[@]}"; do
     check_metric_recorded ./virt-capacity-benchmark/iteration-1 ${job} vmiLatency vmReadyLatency
     check_quantile_recorded ./virt-capacity-benchmark/iteration-1 ${job} vmiLatency VMReady
   done
   # check pvcLatency and dvLatency
-  check_metric_recorded ./virt-capacity-benchmark/iteration-1 create-vms pvcLatency bindingLatency
-  check_metric_recorded ./virt-capacity-benchmark/iteration-1 create-vms dvLatency dvReadyLatency
+  check_metric_recorded ./virt-capacity-benchmark/iteration-1 create-vms-1 pvcLatency bindingLatency
+  check_metric_recorded ./virt-capacity-benchmark/iteration-1 create-vms-2 pvcLatency bindingLatency
+  check_metric_recorded ./virt-capacity-benchmark/iteration-1 create-vms-1 dvLatency dvReadyLatency
+  check_metric_recorded ./virt-capacity-benchmark/iteration-1 create-vms-2 dvLatency dvReadyLatency
+  check_metric_recorded ./virt-capacity-benchmark/iteration-1 snapshot-vms-0 vsReadyLatency
+  check_metric_recorded ./virt-capacity-benchmark/iteration-1 snapshot-vms-1 vsReadyLatency
   check_destroyed_ns virt-capacity-benchmark
 }
 
